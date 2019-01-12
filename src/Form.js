@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 class Form extends Component {
     render() {
-        console.log("Props for Form", this.props)
         return (
             <form action="" onSubmit={this.props.saveData}>
                 <div className="row">
