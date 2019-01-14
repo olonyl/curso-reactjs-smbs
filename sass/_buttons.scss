@@ -1,0 +1,17 @@
+.my {
+    &-btn {
+        background: $primary-brand;
+        border-radius: 5px;
+        border-width: 0;
+        color: #FFF;
+        cursor: pointer;
+        display: inline-block;
+        max-width: 200px;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        width: 100%; 
+        &:hover {
+            background: darken($primary-brand, 5)
+        }
+    }
+}

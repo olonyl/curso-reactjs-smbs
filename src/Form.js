@@ -23,7 +23,7 @@ class Form extends Component {
                         <input type="text" name="phone" className="form-control" value={this.props.phone} onChange={this.props.onChange} required />
                     </div>
                     <div className="col-md-12 mt-3">
-                        <button type="submit" className="btn btn-success" >
+                        <button type="submit" className="my-btn" >
                             Save
                         </button>
                         <button type="reset" className="btn btn-danger ml-3" onClick={this.props.clearInputs} >

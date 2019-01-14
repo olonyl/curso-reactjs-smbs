@@ -1,0 +1,26 @@
+.Header {
+  background: #039be5;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 100%; }
+
+.App {
+  background: #CCC;
+  height: 100vh; }
+
+.my-btn {
+  background: #039be5;
+  border-radius: 5px;
+  border-width: 0;
+  color: #FFF;
+  cursor: pointer;
+  display: inline-block;
+  max-width: 200px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  width: 100%; }
+  .my-btn:hover {
+    background: #038acc; }
+
+/*# sourceMappingURL=style.css.map */

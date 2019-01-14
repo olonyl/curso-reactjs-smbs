@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import Table from './Table';
 import Form from './Form'
+import firebase from 'firebase';
 
 const uuidv4 = require('uuid/v4');
 
@@ -29,12 +30,7 @@ class App extends Component {
     e.preventDefault();
     this.setState({ ...item })
   }
-  deleteRecord = (id) => (e) => {
-    e.preventDefault();
-    this.setState((prevState) => {
-      return { data: prevState.data.filter(item => item.id != id) }
-    })
-  }
+
   saveData = (event) => {
     event.preventDefault();
     if (this.state.id == 0)
@@ -42,47 +38,91 @@ class App extends Component {
     else
       this.updateRecord();
   }
-  createNewRecord = () => {
-    const record = { id: uuidv4(), name: this.state.name, lastName: this.state.lastName, email: this.state.email, phone: this.state.phone }
-
-    //this.setState({ data: this.datos })
-    this.setState((prevState, props) => {
-      return { data: prevState.data.concat(record), ...this.INITIAL_STATE }
-    })
-  }
-  updateRecord = () => {
-    var newRecord;
-    var newData = [];
-    newData = this.state.data.map(item => {
-      newRecord = { ...item }
-      if (item.id == this.state.id) {
-        newRecord = {
-          name: this.state.name,
-          lastName: this.state.lastName,
-          email: this.state.email,
-          phone: this.state.phone,
-          id: item.id
-        }
-      }
-
-      return newRecord;
-    })
-    this.setState((prevState, props) => {
-      return { data: newData, ...this.INITIAL_STATE }
-    })
-  }
-
 
   clearInputs = () => {
     this.setState({ ...this.INITIAL_STATE })
   }
 
+  componentWillMount() {
+    this.initializeFirebase();
+    this.fetchData();
+  }
+
+  initializeFirebase = () => {
+    var config = {
+      apiKey: "AIzaSyChSGpKwG4kejslh9MZ3-eFGoVzCFnlUZI",
+      authDomain: "mcurso-a6b81.firebaseapp.com",
+      databaseURL: "https://mcurso-a6b81.firebaseio.com",
+      projectId: "mcurso-a6b81",
+      storageBucket: "mcurso-a6b81.appspot.com",
+      messagingSenderId: "1037002527642"
+    };
+    firebase.initializeApp(config);
+  }
+
+  fetchData = () => {
+    firebase.database().ref(`/users/employees`)
+      .on('value', snapshot => {
+        this.setState({ data: this.snapshotToArray(snapshot) })
+      })
+  }
+
+  createNewRecord = () => {
+    const record = { name: this.state.name, lastName: this.state.lastName, email: this.state.email, phone: this.state.phone }
+
+    firebase.database().ref(`/users/employees`)
+      .push(record)
+      .then((data) => {
+        this.setState({ ...this.INITIAL_STATE })
+      }).catch(error => console.log(error))
+
+  }
+  deleteRecord = (id) => (e) => {
+    e.preventDefault();
+    firebase.database().ref(`/users/employees/${id}`)
+      .remove()
+      .then((data) => {
+        this.setState({ ...this.INITIAL_STATE })
+      }).catch(error => console.log(error))
+  }
+
+  updateRecord = () => {
+    var newRecord;
+
+    newRecord = {
+      name: this.state.name,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      phone: this.state.phone
+    }
+
+    firebase.database().ref(`/users/employees/${this.state.id}`)
+      .set(newRecord)
+      .then((data) => {
+        this.setState({ ...this.INITIAL_STATE })
+      }).catch(error => console.log(error))
+
+  }
+  snapshotToArray = (snapshot) => {
+    var returnArr = [];
+
+    snapshot.forEach(childSnapshot => {
+      var item = childSnapshot.val();
+      item.id = childSnapshot.key;
+      returnArr.push(item);
+    });
+    return returnArr;
+  }
 
   render() {
-    console.log(this.state)
     return (
       <div className="App">
-        <div className="container mt-2">
+        <div className="Header">
+          <div className="container">
+            algo en header
+          </div>
+        </div>
+        <div className="container">
           <div className="row">
             <div className="col-md-12">
               <div className="card">
